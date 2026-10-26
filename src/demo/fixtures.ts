@@ -232,3 +232,213 @@ export const weekStats = {
     { name: "Tiramisu", count: 184 },
   ],
 };
+
+/* ------------------------------------------------------------------
+   Analytics: drei Zeiträume mit in sich stimmigen Werten.
+------------------------------------------------------------------- */
+export type AnalyticsRange = "heute" | "woche" | "monat";
+
+export type AnalyticsData = {
+  label: string;
+  compareLabel: string;
+  revenue: number;
+  orders: number;
+  deltas: { revenue: string; orders: string; avgTicket: string; webshopShare: string };
+  channels: { name: string; revenue: number }[];
+  /** Umsatz je Punkt in Tausend Euro. */
+  series: number[];
+  seriesPrevious: number[];
+  xLabels: string[];
+  topItems: { name: string; count: number }[];
+};
+
+export const analytics: Record<AnalyticsRange, AnalyticsData> = {
+  heute: {
+    label: "Heute",
+    compareLabel: "Vorwoche, gleicher Tag",
+    revenue: 2418,
+    orders: 126,
+    deltas: { revenue: "+6,2 %", orders: "+4,1 %", avgTicket: "+2,0 %", webshopShare: "+3 Pkt." },
+    channels: [
+      { name: "Vor Ort", revenue: 1235 },
+      { name: "Webshop", revenue: 798 },
+      { name: "Lieferplattformen", revenue: 385 },
+    ],
+    series: [0.08, 0.21, 0.19, 0.09, 0.05, 0.07, 0.16, 0.33, 0.42, 0.39, 0.27, 0.158],
+    seriesPrevious: [0.07, 0.19, 0.18, 0.08, 0.05, 0.06, 0.14, 0.3, 0.4, 0.36, 0.25, 0.2],
+    xLabels: ["11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22"],
+    topItems: [
+      { name: "Margherita", count: 41 },
+      { name: "Diavola", count: 27 },
+      { name: "Burrata-Salat", count: 19 },
+      { name: "Tiramisu", count: 18 },
+    ],
+  },
+  woche: {
+    label: "Woche",
+    compareLabel: "Vorwoche",
+    revenue: weekStats.revenue,
+    orders: weekStats.orders,
+    deltas: {
+      revenue: weekStats.revenueDelta,
+      orders: weekStats.ordersDelta,
+      avgTicket: weekStats.avgTicketDelta,
+      webshopShare: weekStats.webshopShareDelta,
+    },
+    channels: weekStats.channels,
+    series: weekStats.daily,
+    seriesPrevious: weekStats.dailyPrevious,
+    xLabels: ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
+    topItems: weekStats.topItems,
+  },
+  monat: {
+    label: "Monat",
+    compareLabel: "Vormonat",
+    revenue: 90290,
+    orders: 4862,
+    deltas: { revenue: "+5,7 %", orders: "+3,9 %", avgTicket: "+1,7 %", webshopShare: "+2 Pkt." },
+    channels: [
+      { name: "Vor Ort", revenue: 47410 },
+      { name: "Webshop", revenue: 27080 },
+      { name: "Lieferplattformen", revenue: 15800 },
+    ],
+    series: [21.6, 22.3, 22.26, 24.13],
+    seriesPrevious: [20.8, 21.1, 21.0, 22.5],
+    xLabels: ["KW 41", "KW 42", "KW 43", "KW 44"],
+    topItems: [
+      { name: "Margherita", count: 1650 },
+      { name: "Diavola", count: 1071 },
+      { name: "Burrata-Salat", count: 790 },
+      { name: "Tiramisu", count: 735 },
+    ],
+  },
+};
+
+/* ------------------------------------------------------------------
+   Connect: Kanäle und Nachrichten.
+------------------------------------------------------------------- */
+export type ChatMessage = { id: string; author: string; initials: string; role: string; time: string; text: string };
+
+export const channels: { id: string; name: string; members: number; messages: ChatMessage[] }[] = [
+  {
+    id: "kueche",
+    name: "Küche",
+    members: 8,
+    messages: [
+      {
+        id: "k1",
+        author: "Marco R.",
+        initials: "MR",
+        role: "Küche",
+        time: "18:41",
+        text: "Burrata ist für heute aus. Kann jemand den Salat im Shop pausieren?",
+      },
+      {
+        id: "k2",
+        author: "Lena K.",
+        initials: "LK",
+        role: "Service",
+        time: "18:42",
+        text: "Erledigt. Der Service weiß Bescheid.",
+      },
+    ],
+  },
+  {
+    id: "service",
+    name: "Service",
+    members: 6,
+    messages: [
+      {
+        id: "s1",
+        author: "Lena K.",
+        initials: "LK",
+        role: "Service",
+        time: "17:55",
+        text: "Tisch 3 hat für 19:30 auf sechs Personen erweitert.",
+      },
+      {
+        id: "s2",
+        author: "Tom B.",
+        initials: "TB",
+        role: "Bar",
+        time: "17:58",
+        text: "Danke, ich stelle zwei Gläser mehr bereit.",
+      },
+    ],
+  },
+  {
+    id: "lieferung",
+    name: "Lieferung",
+    members: 4,
+    messages: [
+      {
+        id: "l1",
+        author: "Jonas W.",
+        initials: "JW",
+        role: "Fahrer",
+        time: "18:49",
+        text: "#1040 abgeholt, bin in ca. 10 Minuten am Markt.",
+      },
+    ],
+  },
+];
+
+/* ------------------------------------------------------------------
+   Delivery: aktive Lieferungen und Fahrer.
+------------------------------------------------------------------- */
+export type DeliveryStatus = "cooking" | "ready" | "onroute" | "delivered";
+
+export type Delivery = {
+  id: string;
+  label: string;
+  source: Channel;
+  address: string;
+  items: string;
+  status: DeliveryStatus;
+  driverId?: string;
+  eta?: string;
+};
+
+export const drivers = [
+  { id: "jonas", name: "Jonas W.", initials: "JW" },
+  { id: "sara", name: "Sara K.", initials: "SK" },
+  { id: "emre", name: "Emre T.", initials: "ET" },
+];
+
+export const deliveries: Delivery[] = [
+  {
+    id: "3381",
+    label: "#3381",
+    source: "Lieferplattform",
+    address: "Gartenstraße 18",
+    items: "Funghi, Tiramisu",
+    status: "cooking",
+  },
+  {
+    id: "1044",
+    label: "#1044",
+    source: "Webshop",
+    address: "Lindenallee 7",
+    items: "2× Diavola, Hauslimonade",
+    status: "ready",
+  },
+  {
+    id: "1040",
+    label: "#1040",
+    source: "Webshop",
+    address: "Am Markt 12",
+    items: "Capricciosa, Burrata-Salat",
+    status: "onroute",
+    driverId: "jonas",
+    eta: "ca. 6 Min.",
+  },
+  {
+    id: "1037",
+    label: "#1037",
+    source: "Webshop",
+    address: "Musterweg 4",
+    items: "Marinara",
+    status: "delivered",
+    driverId: "sara",
+  },
+];

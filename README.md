@@ -44,6 +44,14 @@ src/
 └── styles/product-ui.css   Gekapselte Styles der Produkt-Screens (.pui)
 ```
 
+## Interaktive Teile
+
+- **Hero:** `src/components/landing/hero-board.tsx` – Bestellsequenz, läuft einmal (< 5 s), danach stabiler Endzustand; „Ablauf erneut abspielen“. Bewegung über React `<ViewTransition>`.
+- **Feature-Timeline:** `src/components/landing/feature-timeline.tsx` – ab 1024 × 760 px Sticky-Bühne mit Scroll-Aktivierung (natives Scrollen, Klick scrollt an die passende Stelle), darunter Tabs bzw. Chips.
+- **Demos:** `src/components/product/*-screen.tsx` – sechs bedienbare Modul-Demos mit lokalem Zustand und „Demo zurücksetzen“. Keine Netzwerkaufrufe, keine Buchungen, keine Zahlungen.
+- **Rechner:** Logik in `src/lib/calculators/` (mit Tests), Oberfläche in `src/components/calculator/`. Neue Rechner im Register `src/content/knowledge.ts` und in `src/app/wissen/rechner-vorlagen/[slug]/page.tsx` eintragen.
+- **Ratgeber:** MDX unter `src/content/ratgeber/<slug>.mdx`, Metadaten und Quellen im Register `src/content/knowledge.ts`.
+
 ## Leitplanken
 
 - **Design-Tokens:** Farben, Radien, Schatten und Motion kommen ausschließlich aus `globals.css` (CSS) bzw. `src/lib/motion.ts` (JS).

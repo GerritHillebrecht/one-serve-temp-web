@@ -14,6 +14,8 @@ export type Feature = {
   /** Zwei Sätze Nutzen. */
   description: string;
   points: [string, string, string];
+  /** Was man in der interaktiven Demo ausprobieren kann. */
+  demoHint: string;
   seo: { title: string; description: string };
 };
 
@@ -29,6 +31,7 @@ export const features: Feature[] = [
       "Positionen mit Extras und Hinweisen",
       "Bar, Karte oder Rechnung teilen",
     ],
+    demoHint: "Tippe auf Produkte, wähle eine Zahlart und schließe den Bon ab.",
     seo: {
       title: "Kassensystem für Restaurants",
       description:
@@ -46,6 +49,7 @@ export const features: Feature[] = [
       "Systemhinweise, etwa zu pausierten Artikeln",
       "Ankündigungen mit Lesebestätigung",
     ],
+    demoHint: "Wechsle den Kanal, schreib eine Nachricht oder mach die Pausierung rückgängig.",
     seo: {
       title: "Connect – interner Messenger für die Gastronomie",
       description:
@@ -63,6 +67,7 @@ export const features: Feature[] = [
       "Offene Schichten auf einen Blick",
       "Geplante Stunden pro Woche",
     ],
+    demoHint: "Wähle eine Schicht und tippe auf ein freies Feld – oder ziehe sie dorthin.",
     seo: {
       title: "Dienstplan für Restaurants",
       description:
@@ -80,6 +85,7 @@ export const features: Feature[] = [
       "Abholung und Lieferung mit Wunschzeit",
       "Artikel und Preise aus der Kasse",
     ],
+    demoHint: "Stell einen Warenkorb zusammen und bestelle. Rechts erscheint die Bestellung im Restaurant.",
     seo: {
       title: "Restaurant-Webshop für Online-Bestellungen",
       description:
@@ -97,6 +103,7 @@ export const features: Feature[] = [
       "Fahrer zuweisen und Touren verfolgen",
       "Eigener Shop und Lieferplattformen zusammen",
     ],
+    demoHint: "Melde Bestellungen fertig, weise Fahrer zu und bestätige die Zustellung.",
     seo: {
       title: "Liefermanagement für Restaurants",
       description:
@@ -110,6 +117,7 @@ export const features: Feature[] = [
     headline: "Zahlen, die du verstehst.",
     description: "Umsatz, Bestellungen und Trends über alle Kanäle und Standorte – ohne Export.",
     points: ["Vergleich mit der Vorwoche", "Umsatz nach Kanal und Standort", "Top-Artikel und starke Zeiten"],
+    demoHint: "Wechsle den Zeitraum und fahr über das Diagramm, um Werte zu sehen.",
     seo: {
       title: "Restaurant-Kennzahlen und Analytics",
       description:

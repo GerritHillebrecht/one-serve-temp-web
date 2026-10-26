@@ -25,3 +25,16 @@ export function formatNumber(value: number): string {
 export function formatAmount(value: number): string {
   return value.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
+
+/**
+ * Liest eine deutsch eingegebene Zahl: „12,5“ → 12.5, „1.500“ → 1500, „12.5“ → 12.5.
+ * Ungültige Eingaben ergeben 0.
+ */
+export function parseGermanNumber(text: string): number {
+  const cleaned = text
+    .replace(/\s/g, "")
+    .replace(/\.(?=\d{3}(\D|$))/g, "")
+    .replace(",", ".");
+  const n = Number(cleaned);
+  return Number.isFinite(n) ? n : 0;
+}

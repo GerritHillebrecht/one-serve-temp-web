@@ -225,3 +225,32 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* View Transitions: nur benannte Elemente bewegen, die Seite selbst nicht überblenden */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+::view-transition-group(.hero-vt) {
+  animation-duration: var(--os-duration-slow);
+  animation-timing-function: var(--os-ease-standard);
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Druckansicht für Rechner und Ratgeber */
+@media print {
+  header,
+  footer,
+  [data-no-print] {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+}

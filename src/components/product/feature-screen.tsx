@@ -15,27 +15,27 @@ const screens: Record<FeatureSlug, () => React.JSX.Element> = {
   analytics: AnalyticsScreen,
 };
 
-export const screenLabels: Record<FeatureSlug, string> = {
-  kassensystem: "Kassen-Screen auf dem Tablet: Tisch 12 mit Bon, Produktkacheln und Bezahlabschluss. Demodaten.",
-  connect:
-    "OneServe Connect: Kanal Küche mit Nachrichten, einem Systemhinweis zu einem pausierten Artikel und einer Ankündigung mit Lesebestätigung. Demodaten.",
-  dienstplan:
-    "Dienstplan der Kalenderwoche 44 mit Mitarbeitern, Rollen, Schichtzeiten und offenen Schichten. Demodaten.",
-  webshop:
-    "Bestellflow im Restaurant-Webshop auf dem Smartphone: Speisekarte mit Warenkorb und Bestellübersicht. Demodaten.",
-  delivery: "Delivery-Übersicht mit aktiven Lieferungen, Fahrern und einer Karte mit Route. Demodaten.",
-  analytics: "Analytics mit Wochenumsatz, Bestellungen, Umsatzverlauf, Umsatz nach Kanal und Top-Artikeln. Demodaten.",
+const names: Record<FeatureSlug, string> = {
+  kassensystem: "Kassensystem",
+  connect: "Connect",
+  dienstplan: "Dienstplan",
+  webshop: "Webshop",
+  delivery: "Delivery",
+  analytics: "Analytics",
 };
 
 /**
- * Produkt-Screen eines Moduls. Bis die interaktiven Demos stehen (Phase 3),
- * ist der Screen ein statisches, beschriftetes Bild für Screenreader.
+ * Interaktive Demo eines Moduls. Läuft vollständig im Browser mit
+ * Demo-Daten: keine Netzwerkaufrufe, keine Buchungen, keine Zahlungen.
  */
 export function FeatureScreen({ slug }: { slug: FeatureSlug }) {
   const Screen = screens[slug];
   return (
-    <div className="pui flex h-full w-full items-center justify-center" role="img" aria-label={screenLabels[slug]}>
+    <section
+      className="pui flex h-full w-full items-center justify-center"
+      aria-label={`Interaktive Demo: ${names[slug]} (Demodaten)`}
+    >
       <Screen />
-    </div>
+    </section>
   );
 }

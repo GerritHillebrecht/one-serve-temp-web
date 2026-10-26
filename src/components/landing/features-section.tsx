@@ -11,6 +11,7 @@ export function FeaturesSection() {
     description: f.description,
     points: f.points,
     href: featureHref(f.slug),
+    demoHint: f.demoHint,
   }));
   return (
     <Section id="funktionen" aria-labelledby="funktionen-title" className="border-t border-border">
@@ -18,7 +19,7 @@ export function FeaturesSection() {
         eyebrow="Funktionen"
         title="Sechs Module. Eine Plattform."
         titleId="funktionen-title"
-        lead="Jedes Modul arbeitet mit denselben Produkten, Bestellungen und Mitarbeitern. Wähle ein Modul, um den Screen zu sehen."
+        lead="Jedes Modul arbeitet mit denselben Produkten, Bestellungen und Mitarbeitern. Jede Ansicht ist eine bedienbare Demo mit Beispieldaten."
         className="md:mb-12"
       />
       <FeatureTimeline

@@ -1,85 +1,178 @@
-import { CirclePause, Send } from "lucide-react";
+"use client";
 
-import { team } from "@/demo/fixtures";
+import { useEffect, useId, useRef, useState } from "react";
+import { CirclePause, CirclePlay, Send } from "lucide-react";
+
+import { channels as initialChannels, team, type ChatMessage } from "@/demo/fixtures";
+import { cn } from "@/lib/utils";
 import { AppShell } from "./app-shell";
 
-/** OneServe Connect: interner Messenger mit Kanälen und Systemhinweisen. */
+/**
+ * Connect-Demo: interner Messenger. Kanäle wechseln, Nachricht schreiben,
+ * Systemhinweis rückgängig machen, Ankündigung als gelesen markieren.
+ */
 export function ConnectScreen() {
+  const inputId = useId();
+  const [channelId, setChannelId] = useState("kueche");
+  const [messages, setMessages] = useState<Record<string, ChatMessage[]>>(() =>
+    Object.fromEntries(initialChannels.map((c) => [c.id, c.messages])),
+  );
+  const [paused, setPaused] = useState(true);
+  const [read, setRead] = useState(false);
+  const [draft, setDraft] = useState("");
+  const [unread, setUnread] = useState<Record<string, number>>({ service: 2, lieferung: 1 });
+
+  const channel = initialChannels.find((c) => c.id === channelId)!;
+  const list = messages[channelId];
+  const listRef = useRef<HTMLDivElement>(null);
+
+  // Neue Nachrichten sichtbar halten.
+  useEffect(() => {
+    const el = listRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [list.length, channelId]);
+
+  const open = (id: string) => {
+    setChannelId(id);
+    setUnread((u) => ({ ...u, [id]: 0 }));
+  };
+
+  const send = (e: React.FormEvent) => {
+    e.preventDefault();
+    const text = draft.trim();
+    if (!text) return;
+    setMessages((m) => ({
+      ...m,
+      [channelId]: [
+        ...m[channelId],
+        { id: `du-${m[channelId].length}`, author: "Du", initials: "DU", role: "Leitung", time: "jetzt", text },
+      ],
+    }));
+    setDraft("");
+  };
+
   return (
-    <AppShell active="connect" title="# Küche" toolbar={<span className="muted hide-sm">8 Mitglieder</span>}>
+    <AppShell
+      active="connect"
+      title={`# ${channel.name}`}
+      toolbar={<span className="muted hide-sm">{channel.members} Mitglieder</span>}
+    >
       <div className="cx">
         <div className="cx-ch">
           <small>Kanäle</small>
-          <span className="cx-c">
-            # Alle<em>2</em>
-          </span>
-          <span className="cx-c on"># Küche</span>
-          <span className="cx-c"># Service</span>
-          <span className="cx-c"># Lieferung</span>
+          {initialChannels.map((c) => (
+            <button
+              key={c.id}
+              type="button"
+              className={cn("cx-c", c.id === channelId && "on")}
+              aria-current={c.id === channelId}
+              onClick={() => open(c.id)}
+            >
+              # {c.name}
+              {unread[c.id] ? <em>{unread[c.id]}</em> : null}
+            </button>
+          ))}
           <small>Direkt</small>
-          <span className="cx-c">
-            <span className="av" style={{ width: 20, height: 20, fontSize: 9 }}>
-              MR
+          {team.slice(0, 2).map((m) => (
+            <span className="cx-c" key={m.id}>
+              <span className="av" style={{ width: 20, height: 20, fontSize: 9 }}>
+                {m.initials}
+              </span>
+              {m.name}
             </span>
-            Marco R.
-          </span>
-          <span className="cx-c">
-            <span className="av" style={{ width: 20, height: 20, fontSize: 9 }}>
-              LK
-            </span>
-            Lena K.
-          </span>
+          ))}
         </div>
         <div className="cx-t">
-          <div className="cx-msgs">
-            <div className="pin">
-              <div className="between">
-                <b style={{ fontWeight: 600 }}>Ankündigung</b>
-                <span className="muted" style={{ fontSize: 12 }}>
-                  Gelesen von 11 / 14
-                </span>
-              </div>
-              <span>Ab Montag gilt die neue Abendkarte. Bitte bis Freitag durchsehen.</span>
-            </div>
-            <div className="msg">
-              <span className="av">MR</span>
-              <div>
-                <div className="msg-h">
-                  <b>Marco R.</b>
-                  <span>Küche · 18:41</span>
-                </div>
-                <div>Burrata ist für heute aus. Kann jemand den Salat im Shop pausieren?</div>
-              </div>
-            </div>
-            <div className="sys">
-              <span className="sys-ic">
-                <CirclePause size={14} strokeWidth={2} aria-hidden="true" />
-              </span>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <b style={{ fontWeight: 600 }}>Burrata-Salat pausiert</b>
-                <div className="muted" style={{ fontSize: 12 }}>
-                  Webshop und Kasse · von Lena K. · 18:42
-                </div>
-              </div>
-              <span className="mbtn ghost hide-sm">Rückgängig</span>
-            </div>
-            <div className="msg">
-              <span className="av">LK</span>
-              <div>
-                <div className="msg-h">
-                  <b>Lena K.</b>
-                  <span>Service · 18:42</span>
-                </div>
-                <div>Erledigt. Der Service weiß Bescheid.</div>
-              </div>
-            </div>
+          <div className="cx-tabs" role="group" aria-label="Kanal">
+            {initialChannels.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                className={cn("chip", c.id === channelId ? "on" : "out")}
+                aria-pressed={c.id === channelId}
+                onClick={() => open(c.id)}
+              >
+                # {c.name}
+              </button>
+            ))}
           </div>
-          <div className="compose">
-            <span>Nachricht an # Küche</span>
-            <span className="mbtn" aria-hidden="true">
-              <Send size={14} strokeWidth={2.2} />
-            </span>
+          <div className="cx-msgs" aria-live="polite" ref={listRef}>
+            {channelId === "kueche" ? (
+              <div className="pin">
+                <div className="between">
+                  <b style={{ fontWeight: 600 }}>Ankündigung</b>
+                  <span className="muted" style={{ fontSize: 12 }}>
+                    Gelesen von {read ? 12 : 11} / 14
+                  </span>
+                </div>
+                <span>Ab Montag gilt die neue Abendkarte. Bitte bis Freitag durchsehen.</span>
+                {!read ? (
+                  <button
+                    type="button"
+                    className="mbtn ghost sm"
+                    style={{ alignSelf: "flex-start" }}
+                    onClick={() => setRead(true)}
+                  >
+                    Als gelesen markieren
+                  </button>
+                ) : null}
+              </div>
+            ) : null}
+            {list.map((m, i) => (
+              <div key={m.id}>
+                <div className="msg">
+                  <span className="av">{m.initials}</span>
+                  <div>
+                    <div className="msg-h">
+                      <b>{m.author}</b>
+                      <span>
+                        {m.role} · {m.time}
+                      </span>
+                    </div>
+                    <div>{m.text}</div>
+                  </div>
+                </div>
+                {channelId === "kueche" && i === 0 ? (
+                  <div className="sys" style={{ marginTop: 16 }}>
+                    <span className="sys-ic">
+                      {paused ? (
+                        <CirclePause size={14} strokeWidth={2} aria-hidden="true" />
+                      ) : (
+                        <CirclePlay size={14} strokeWidth={2} aria-hidden="true" />
+                      )}
+                    </span>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <b style={{ fontWeight: 600 }}>
+                        {paused ? "Burrata-Salat pausiert" : "Burrata-Salat wieder verfügbar"}
+                      </b>
+                      <div className="muted" style={{ fontSize: 12 }}>
+                        Webshop und Kasse · {paused ? "von Lena K. · 18:42" : "von dir · jetzt"}
+                      </div>
+                    </div>
+                    <button type="button" className="mbtn ghost" onClick={() => setPaused((p) => !p)}>
+                      {paused ? "Rückgängig" : "Wieder pausieren"}
+                    </button>
+                  </div>
+                ) : null}
+              </div>
+            ))}
           </div>
+          <form className="compose" onSubmit={send}>
+            <label htmlFor={inputId} className="sr-only">
+              Nachricht an # {channel.name}
+            </label>
+            <input
+              id={inputId}
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              placeholder={`Nachricht an # ${channel.name}`}
+              autoComplete="off"
+              className="compose-input"
+            />
+            <button type="submit" className="mbtn" aria-label="Senden" disabled={!draft.trim()}>
+              <Send size={14} strokeWidth={2.2} aria-hidden="true" />
+            </button>
+          </form>
         </div>
         <div className="cx-on">
           <small>Im Dienst · {team.length}</small>

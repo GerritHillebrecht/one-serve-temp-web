@@ -3,7 +3,7 @@ import { Check } from "lucide-react";
 
 import { Container } from "@/components/site/container";
 import { Button } from "@/components/ui/button";
-import { OrdersBoard } from "@/components/product/orders-board";
+import { HeroBoard } from "@/components/landing/hero-board";
 import { siteConfig } from "@/config/site";
 
 const meta = [
@@ -49,13 +49,9 @@ export function Hero() {
           ))}
         </ul>
         <div className="mt-10 overflow-hidden rounded-t-xl bg-gray-50 pl-5 pt-5 md:mt-14 md:px-10 md:pt-10">
-          <div
-            className="pui"
-            role="img"
-            aria-label="OneServe Restaurant Manager: Bestellübersicht mit den Spalten Neu, In Zubereitung, Bereit und Unterwegs. Eine neue Webshop-Bestellung ist eingegangen. Demodaten."
-          >
-            <OrdersBoard className="hero-win" />
-          </div>
+          <figure className="pui m-0">
+            <HeroBoard />
+          </figure>
         </div>
       </Container>
     </section>

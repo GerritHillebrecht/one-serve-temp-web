@@ -6,6 +6,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { Breadcrumbs } from "@/components/marketing/breadcrumbs";
 import { JsonLd } from "@/components/marketing/json-ld";
 import { FinalCta } from "@/components/landing/final-cta";
+import { DemoStage } from "@/components/product/demo-stage";
 import { FeatureScreen } from "@/components/product/feature-screen";
 import { Container } from "@/components/site/container";
 import { Button } from "@/components/ui/button";
@@ -74,8 +75,10 @@ export default async function FeaturePage({ params }: PageProps<"/funktionen/[sl
             </div>
           </div>
         </div>
-        <div className="mt-12 flex h-[520px] items-center justify-center overflow-hidden rounded-xl bg-gray-50 p-3.5 sm:h-[600px] sm:p-6 lg:h-[680px] lg:p-10">
-          <FeatureScreen slug={feature.slug} />
+        <div className="mt-12">
+          <DemoStage hint={feature.demoHint} className="h-[540px] p-3.5 sm:h-[600px] sm:p-6 lg:h-[680px] lg:p-10">
+            <FeatureScreen slug={feature.slug} />
+          </DemoStage>
         </div>
       </Container>
 
