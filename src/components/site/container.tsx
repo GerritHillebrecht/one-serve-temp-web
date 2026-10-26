@@ -1,0 +1,5 @@
+import { cn } from "@/lib/utils";
+
+export function Container({ className, ...props }: React.ComponentProps<"div">) {
+  return <div className={cn("mx-auto w-full max-w-[1264px] px-4 sm:px-8", className)} {...props} />;
+}

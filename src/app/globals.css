@@ -1,26 +1,227 @@
 @import "tailwindcss";
+@import "../styles/product-ui.css";
 
+/* ------------------------------------------------------------------
+   OneServe Design-Tokens
+   Eine Quelle für Farben, Radien, Schatten und Motion.
+   shadcn/ui liest die semantischen Variablen (background, primary …),
+   Marketing- und Produkt-Komponenten nutzen dieselben Werte.
+------------------------------------------------------------------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  /* Neutrale Skala */
+  --os-black: #000000;
+  --os-gray-900: #141414;
+  --os-gray-800: #282828;
+  --os-gray-700: #3f3f3f;
+  --os-gray-600: #545454;
+  --os-gray-500: #6b6b6b;
+  --os-gray-400: #9a9a9a;
+  --os-gray-300: #cbcbcb;
+  --os-gray-200: #e5e5e5;
+  --os-gray-150: #ececec;
+  --os-gray-100: #f1f1f1;
+  --os-gray-50: #f7f7f7;
+  --os-white: #ffffff;
+
+  /* Marke und Status */
+  --os-brand: #3b5bdb;
+  --os-positive: #0e7a4f;
+  --os-positive-bg: #e6f4ec;
+  --os-warning: #94560a;
+  --os-warning-bg: #fbf0df;
+
+  /* Radien und Schatten */
+  --os-radius-sm: 8px;
+  --os-radius: 12px;
+  --os-radius-lg: 16px;
+  --os-radius-xl: 20px;
+  --os-shadow-xs: 0 1px 2px rgb(0 0 0 / 0.05);
+  --os-shadow-frame: 0 1px 2px rgb(0 0 0 / 0.04), 0 28px 64px -32px rgb(0 0 0 / 0.24);
+
+  /* Motion */
+  --os-duration-fast: 160ms;
+  --os-duration-base: 240ms;
+  --os-duration-slow: 420ms;
+  --os-ease-standard: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --os-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --os-distance-sm: 6px;
+  --os-distance-md: 12px;
+
+  /* shadcn/ui-Semantik */
+  --background: var(--os-white);
+  --foreground: var(--os-gray-900);
+  --card: var(--os-white);
+  --card-foreground: var(--os-gray-900);
+  --popover: var(--os-white);
+  --popover-foreground: var(--os-gray-900);
+  --primary: var(--os-black);
+  --primary-foreground: var(--os-white);
+  --secondary: var(--os-gray-100);
+  --secondary-foreground: var(--os-gray-900);
+  --muted: var(--os-gray-50);
+  --muted-foreground: var(--os-gray-600);
+  --accent: var(--os-gray-100);
+  --accent-foreground: var(--os-gray-900);
+  --border: var(--os-gray-200);
+  --input: var(--os-gray-200);
+  --ring: var(--os-black);
+  --radius: var(--os-radius);
 }
 
 @theme inline {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-ink: var(--os-gray-900);
+  --color-gray-50: var(--os-gray-50);
+  --color-gray-100: var(--os-gray-100);
+  --color-gray-150: var(--os-gray-150);
+  --color-gray-200: var(--os-gray-200);
+  --color-gray-300: var(--os-gray-300);
+  --color-gray-400: var(--os-gray-400);
+  --color-gray-500: var(--os-gray-500);
+  --color-gray-600: var(--os-gray-600);
+  --color-gray-700: var(--os-gray-700);
+  --color-gray-800: var(--os-gray-800);
+  --color-gray-900: var(--os-gray-900);
+  --color-brand: var(--os-brand);
+  --color-positive: var(--os-positive);
+
+  --radius-sm: var(--os-radius-sm);
+  --radius-md: var(--os-radius);
+  --radius-lg: var(--os-radius-lg);
+  --radius-xl: var(--os-radius-xl);
+
+  --shadow-xs: var(--os-shadow-xs);
+  --shadow-frame: var(--os-shadow-frame);
+
+  --ease-standard: var(--os-ease-standard);
+  --ease-exit: var(--os-ease-exit);
+
+  --animate-fade-up: fade-up var(--os-duration-base) var(--os-ease-standard) both;
+  --animate-screen-in: screen-in var(--os-duration-slow) var(--os-ease-standard) both;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  /* Sprungziele nicht unter dem Sticky-Header verstecken */
+  [id] {
+    scroll-margin-top: 80px;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    overflow-x: clip;
+  }
+  :focus-visible {
+    outline: 2px solid var(--os-black);
+    outline-offset: 3px;
+    border-radius: 6px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  .duration-fast {
+    transition-duration: var(--os-duration-fast);
+  }
+  .duration-base {
+    transition-duration: var(--os-duration-base);
+  }
+  .duration-slow {
+    transition-duration: var(--os-duration-slow);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(var(--os-distance-sm));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--os-distance-md));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+.accordion-content[data-state="open"] {
+  animation: accordion-down var(--os-duration-base) var(--os-ease-standard);
+}
+.accordion-content[data-state="closed"] {
+  animation: accordion-up var(--os-duration-base) var(--os-ease-exit);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
